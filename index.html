@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#e8f1fb">
+<title>The General Bot</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap">
+<style>
+:root{--blue:#2b6df0;--ink:#1b2a41;--mute:#7b8aa3;--glass:rgba(255,255,255,.72);--bd:rgba(255,255,255,.9);--sh:0 6px 20px rgba(60,100,160,.12);color-scheme:light}
+*{box-sizing:border-box;margin:0}
+:root{padding-top:env(safe-area-inset-top,0px)}
+body{font-family:Cairo,system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,#dcebfa 0,#eef5fd 45%,#e3eefb 100%) fixed;max-width:480px;margin:auto;padding:12px 14px 120px;min-height:100vh}
+.glass{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--bd);border-radius:22px;box-shadow:var(--sh)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;margin-bottom:12px}
+.top .t{text-align:center}.top b{font-size:19px;font-weight:800;letter-spacing:.5px}
+.top small{display:block;font-size:11px;color:var(--mute)}
+.ic{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:var(--sh);border:0;font-size:16px}
+.ic+.ic{margin-inline-start:6px}
+.brk{display:flex;gap:10px;padding:8px;margin-bottom:12px}
+.brk button{flex:1;border:0;border-radius:16px;padding:11px 6px;font:700 13px Cairo;background:transparent;color:var(--ink);cursor:pointer}
+.brk button[aria-pressed=true]{background:linear-gradient(135deg,#2f7bff,#1f5be0);color:#fff;box-shadow:0 6px 14px rgba(43,109,240,.4)}
+.strip{padding:10px 12px;text-align:center;margin-bottom:12px;font-size:12px;color:#44546e}
+.chip{display:inline-block;background:#d9f5e7;color:#0e8a55;font-weight:800;font-size:12px;border-radius:12px;padding:2px 12px;margin-bottom:4px}
+.bal{background:linear-gradient(135deg,#1a2740,#2b3d5c 60%,#1d2c47);color:#fff;border-radius:24px;padding:16px;margin-bottom:12px;box-shadow:0 10px 24px rgba(20,40,80,.35)}
+.bal .r{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.bal .l{font-size:12px;opacity:.85}
+.bal .n{font-size:34px;font-weight:800;direction:ltr;text-align:right;letter-spacing:1px}
+.bot{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;border:1px solid rgba(255,255,255,.4);flex:none}
+.pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.9);color:#4b5a73;font-size:12px;font-weight:700;border-radius:14px;padding:4px 10px;margin:8px 0 6px}
+.dot{width:9px;height:9px;border-radius:50%;background:#9aa6ba;display:inline-block}
+.dot.on{background:#1fcf86;box-shadow:0 0 8px #1fcf86}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.mini div{background:rgba(255,255,255,.88);color:var(--ink);border-radius:16px;padding:8px 4px;text-align:center}
+.mini span{font-size:11px;color:var(--mute);display:block}.mini b{font-size:15px;direction:ltr;display:block}
+.gold{display:flex;align-items:center;justify-content:space-between;padding:14px;margin-bottom:12px}
+.gold .p{font-size:28px;font-weight:800;color:var(--blue);direction:ltr}
+.gold .nm{font-size:15px;font-weight:800}
+.mt5{background:#dce8ff;color:var(--blue);font-size:11px;font-weight:800;border-radius:10px;padding:1px 8px;margin-inline-start:6px}
+.live{font-size:11px;color:#0e8a55;font-weight:700}
+.coin{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#8c97a8 60%,#5d6878)}
+.box{padding:14px;margin-bottom:12px}
+.box h2{font-size:16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.st{font-size:11px;font-weight:700;background:#e9edf3;color:#6b7a92;border-radius:12px;padding:3px 10px}
+.st.on{background:#d9f5e7;color:#0e8a55}
+.ctl{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ctl button{border:0;border-radius:18px;padding:14px 6px;font:800 15px Cairo;cursor:pointer;color:#fff;line-height:1.3}
+.ctl small{display:block;font:600 11px Cairo;opacity:.85}
+#start{background:linear-gradient(135deg,#2f7bff,#1f5be0);box-shadow:0 8px 16px rgba(43,109,240,.35)}
+#start.run{background:linear-gradient(135deg,#1fc07a,#129a5c);box-shadow:0 8px 16px rgba(23,166,106,.35)}
+#stop{background:#e9edf3;color:#8b97ab}
+#stop.run{background:linear-gradient(135deg,#46505f,#2c3441);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stats div{padding:10px 2px;text-align:center;border-radius:18px}
+.stats i{font-style:normal;font-size:18px;display:block}
+.stats span{font-size:10.5px;color:var(--mute);display:block}
+.stats b{font-size:14px;direction:ltr;display:block;color:var(--ink)}
+.up{color:#14a05f!important}.dn{color:#e0524f!important}
+.tr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px;background:#fff;border-radius:16px;padding:10px 12px;margin-bottom:8px;border-left:4px solid #1fcf86;box-shadow:0 2px 8px rgba(60,100,160,.08)}
+.tr.op{border-left-color:#3b86ff}
+.tr .a{font-weight:800;font-size:14px;white-space:nowrap}
+.tr .a em{font-style:normal;font-size:10px;background:var(--blue);color:#fff;border-radius:6px;padding:0 6px;margin-inline-start:4px}
+.tr .a em.s{background:#e0524f}
+.tr small{display:block;font-size:10px;color:var(--mute);direction:ltr;text-align:right;white-space:nowrap}
+.tr .m{text-align:center;direction:ltr;font-weight:800;font-size:14px}.tr .m small{text-align:center;color:var(--blue)}
+.tr .pf{text-align:center}.tr .pf b{display:block;direction:ltr;font-size:14px}
+.cl{font-size:10.5px;color:#0e8a55;background:#d9f5e7;border-radius:8px;padding:1px 8px}
+.cl.o{color:var(--blue);background:#dcebff}
+.empty{text-align:center;color:var(--mute);font-size:13px;padding:16px 0}
+.demo{text-align:center;font-size:11px;color:var(--mute);margin-bottom:8px}
+nav{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:452px;display:flex;justify-content:space-around;align-items:flex-end;padding:10px 6px 8px;font-size:11px;color:#55657f;font-weight:700}
+nav div{text-align:center}nav i{font-style:normal;display:block;font-size:19px}
+nav .a{color:var(--blue)}
+nav .mid{margin-top:-34px}
+nav .mid i{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#3b86ff,#1f5be0);display:grid;place-items:center;box-shadow:0 8px 18px rgba(43,109,240,.5);border:3px solid #fff;margin:0 auto 2px;color:#fff}
+</style>
+</head>
+<body>
+
+<header class="top glass">
+  <div><button class="ic">⚙️</button><button class="ic">🔌</button></div>
+  <div class="t"><b>THE GENERAL</b><small id="acc">JustMarkets · #9482015</small></div>
+  <button class="ic">☰</button>
+</header>
+
+<div class="brk glass" id="brk"></div>
+
+<div class="strip glass"><span class="chip">⚡ تداول خاطف فائق السرعة (بيع وشراء)</span><br>منصة The General · متصل بوسيط <span id="bn">JustMarkets</span></div>
+
+<section class="bal">
+  <div class="r">
+    <div><div class="l">● رصيد الحساب</div><div class="n" id="bal">USD 0.00</div>
+      <span class="pill"><span class="dot" id="d1"></span><span id="rs">الروبوت متوقف</span></span></div>
+    <div class="bot"><img src="bot.png" alt="" width="68" height="68" style="border-radius:50%;object-fit:cover"></div>
+  </div>
+  <div class="mini">
+    <div><span>🏦 الرصيد</span><b id="m1">$0.00</b></div>
+    <div><span>📈 إجمالي الأرباح</span><b class="up" id="m2">+$0.00</b></div>
+    <div><span>◉ نسبة الربح</span><b class="up" id="m3">+0%</b></div>
+  </div>
+</section>
+
+<section class="gold glass">
+  <div class="coin"></div>
+  <div style="text-align:start"><div class="nm">الذهب مقابل الدولار (XAU/USD)<span class="mt5">مباشر MT5</span></div><div class="live">● نشط ويتذبذب حي</div></div>
+  <div class="p" id="px">$3896.285</div>
+</section>
+
+<section class="box glass">
+  <h2><span>⚡ مربع تشغيل الروبوت</span><span class="st" id="st2">الروبوت متوقف</span></h2>
+  <div class="ctl">
+    <button id="start">▶ بدء تشغيل الروبوت<small>يعمل ويجني الأرباح</small></button>
+    <button id="stop" disabled>■ إيقاف الروبوت<small id="stsub">متوقف حالياً</small></button>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="glass"><i>📊</i><span>أرباح اليوم</span><b class="up" id="s1">+$0.00</b></div>
+  <div class="glass"><i>🗓️</i><span>أرباح الأسبوع</span><b class="up" id="s2">+$0.00</b></div>
+  <div class="glass"><i>🪙</i><span>الصفقات</span><b id="s3">0</b></div>
+  <div class="glass"><i>📈</i><span>نسبة النجاح</span><b id="s4">0%</b></div>
+</div>
+
+<section class="box glass">
+  <h2><span>🧺 الصفقات</span><span class="st">فتح وإغلاق تلقائي</span></h2>
+  <div id="trades"></div>
+</section>
+
+<p class="demo">نسخة تجريبية ببيانات محاكاة · غير متصلة بحساب حقيقي</p>
+
+<nav class="glass">
+  <div class="a"><i>⌂</i>الرئيسية</div><div><i>🧰</i>الروبوت</div>
+  <div class="mid"><i>🤖</i>تداول</div>
+  <div><i>🕑</i>التاريخ</div><div><i>⚙️</i>الإعدادات</div>
+</nav>
+
+<script>
+const $=id=>document.getElementById(id),B=["JustMarkets","Exness (إكسنس)"];
+let bi=0,run=false,px=3896.285,bal=0,day=0,n=0,w=0,tm=null,id=8571615,tr=[];
+const f=v=>(v>=0?"+$":"-$")+Math.abs(v).toFixed(2);
+function brk(){
+  $("brk").innerHTML=[0,1].map(i=>`<button data-i="${i}" aria-pressed="${i===bi}">${i?"🟡 ":"🔵 "}${B[i]}</button>`).join("");
+  $("bn").textContent=B[bi].split(" ")[0];
+  $("acc").textContent=B[bi].split(" ")[0]+" · #9482015";
+}
+$("brk").onclick=e=>{const i=e.target.dataset.i;if(i!=null){bi=+i;brk()}};
+function list(){
+  $("trades").innerHTML=!tr.length?`<p class="empty">${run?"جاري فحص السوق…":"البوت متوقف"}</p>`:tr.slice(0,5).map(t=>`<div class="tr ${t.open?'op':''}"><div><div class="a">XAUUSD <em class="${t.b?'':'s'}">${t.b?'BUY':'SELL'}</em></div><small>#${t.id} · Lot 0.01</small></div><div class="m"><small>الدخول ← الحالي</small>${t.e.toFixed(3)}<small>→ ${t.c.toFixed(3)}</small></div><div class="pf"><small>${t.open?'الربح الحالي':'الربح'}</small><b class="${t.p>=0?'up':'dn'}">${f(t.p)}</b><span class="cl ${t.open?'o':''}">${t.open?'مفتوحة':'مغلقة'}</span></div></div>`).join("");
+}
+function endTrade(t){t.open=0;if(t.p>0)w++;bal+=t.p;day+=t.p;n++}
+function ui(){
+  $("bal").textContent="USD "+bal.toFixed(2);$("m1").textContent="$"+bal.toFixed(2);
+  $("m2").textContent=f(day);$("s1").textContent=f(day);$("s2").textContent=f(day);$("s3").textContent=n;
+  const r=n?Math.round(w/n*100):0;$("s4").textContent=r+"%";$("m3").textContent="+"+r+"%";list();
+}
+function setRun(r){
+  run=r;$("d1").className="dot"+(r?" on":"");
+  $("rs").textContent=r?"الروبوت يعمل بنشاط · 0.5s":"الروبوت متوقف";
+  $("st2").textContent=$("rs").textContent;$("st2").className="st"+(r?" on":"");
+  $("start").className=r?"run":"";$("start").disabled=r;
+  $("stop").className=r?"run":"";$("stop").disabled=!r;
+  $("stsub").textContent=r?"إيقاف الصفقات فوراً":"متوقف حالياً";
+  clearInterval(tm);
+  if(r){
+    tm=setInterval(()=>{
+      tr.filter(t=>t.open).forEach(t=>{t.p=+(t.p+Math.random()*.07-.01).toFixed(2);t.c=t.e+(t.b?1:-1)*t.p;if(t.p>=t.tp)endTrade(t)});
+      if(Math.random()<.1&&tr.filter(t=>t.open).length<2){const b=Math.random()<.55;id+=7;tr.unshift({b,e:px,c:px,p:0,tp:+(Math.random()*.1+.25).toFixed(2),open:1,id})}
+      ui();
+    },500);
+  }else{tr.filter(t=>t.open).forEach(endTrade);tr=[];ui()}
+}
+$("start").onclick=()=>{setRun(true);ui()};
+$("stop").onclick=()=>setRun(false);
+setInterval(()=>{px+=(Math.random()-.5)*.4;$("px").textContent="$"+px.toFixed(3)},500);
+brk();ui();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
